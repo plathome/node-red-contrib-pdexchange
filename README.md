@@ -99,3 +99,164 @@ npm install /to/the/directory/node-red-contrib-pdexchange
 ]
 ```
 
+
+6. Example Flow 2 Sending Data to PDExchange and Gauge Visualization
+
+### Node-Red Importable Format
+
+![](docs/images/fig3.png?raw=true)
+
+### Flow 2 in Importable Format
+
+```
+[{"id":"e9301c9e.87378","type":"function","z":"665cd480.5bc3e4","name":"","func":"\nreturn {\n  payload: msg.payload.count  \n};","outputs":1,"noerr":0,"x":530,"y":340,"wires":[["84fb4acf.9d849","4ac3e3cd.9f1684"]]},{"id":"84fb4acf.9d849","type":"debug","z":"665cd480.5bc3e4","name":"","active":false,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":770,"y":340,"wires":[]},{"id":"3ed6f692.c90b52","type":"inject","z":"665cd480.5bc3e4","name":"","topic":"","payload":"","payloadType":"date","repeat":"3","crontab":"","once":false,"onceDelay":"","x":130,"y":80,"wires":[["7a293f6f.0bf26"]]},{"id":"da284c1.ad7ae3","type":"http request","z":"665cd480.5bc3e4","name":"PDEx GET","method":"GET","ret":"obj","url":"http://elias-mbp.iot.platdns.net:8090/api/v1/apps/bbe05a3b11da4da1983a64b35107e514/messages","tls":"","x":290,"y":340,"wires":[["4b3ade5a.f49e9","e9301c9e.87378"]]},{"id":"7a293f6f.0bf26","type":"function","z":"665cd480.5bc3e4","name":"Bearer Auth","func":"msg.payload = \"\"\nmsg.headers = {}\nmsg.headers['Authorization'] = 'Bearer fe895810cabb';\n\nreturn msg;","outputs":1,"noerr":0,"x":170,"y":200,"wires":[["da284c1.ad7ae3"]]},{"id":"4b3ade5a.f49e9","type":"debug","z":"665cd480.5bc3e4","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","x":510,"y":200,"wires":[]},{"id":"4ac3e3cd.9f1684","type":"ui_gauge","z":"665cd480.5bc3e4","name":"","group":"47ae6855.1b39f","order":0,"width":0,"height":0,"gtype":"gage","title":"gauge","label":"units","format":"{{value}}","min":0,"max":10,"colors":["#00b500","#e6e600","#ca3838"],"seg1":"","seg2":"","x":750,"y":460,"wires":[]},{"id":"47ae6855.1b39f","type":"ui_group","z":"665cd480.5bc3e4","name":"Default","tab":"e055f34d.bed8b8","disp":true,"width":"6","collapse":false},{"id":"e055f34d.bed8b8","type":"ui_tab","z":"665cd480.5bc3e4","name":"Home","icon":"dashboard"}]
+```
+
+### Flow 2 in Readable Format
+
+```
+[
+    {
+        "id": "e9301c9e.87378",
+        "type": "function",
+        "z": "665cd480.5bc3e4",
+        "name": "",
+        "func": "\nreturn {\n  payload: msg.payload.count  \n};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 530,
+        "y": 340,
+        "wires": [
+            [
+                "84fb4acf.9d849",
+                "4ac3e3cd.9f1684"
+            ]
+        ]
+    },
+    {
+        "id": "84fb4acf.9d849",
+        "type": "debug",
+        "z": "665cd480.5bc3e4",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 770,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "3ed6f692.c90b52",
+        "type": "inject",
+        "z": "665cd480.5bc3e4",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "3",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "7a293f6f.0bf26"
+            ]
+        ]
+    },
+    {
+        "id": "da284c1.ad7ae3",
+        "type": "http request",
+        "z": "665cd480.5bc3e4",
+        "name": "PDEx GET",
+        "method": "GET",
+        "ret": "obj",
+        "url": "http://elias-mbp.iot.platdns.net:8090/api/v1/apps/bbe05a3b11da4da1983a64b35107e514/messages",
+        "tls": "",
+        "x": 290,
+        "y": 340,
+        "wires": [
+            [
+                "4b3ade5a.f49e9",
+                "e9301c9e.87378"
+            ]
+        ]
+    },
+    {
+        "id": "7a293f6f.0bf26",
+        "type": "function",
+        "z": "665cd480.5bc3e4",
+        "name": "Bearer Auth",
+        "func": "msg.payload = \"\"\nmsg.headers = {}\nmsg.headers['Authorization'] = 'Bearer fe895810cabb';\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 170,
+        "y": 200,
+        "wires": [
+            [
+                "da284c1.ad7ae3"
+            ]
+        ]
+    },
+    {
+        "id": "4b3ade5a.f49e9",
+        "type": "debug",
+        "z": "665cd480.5bc3e4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 510,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4ac3e3cd.9f1684",
+        "type": "ui_gauge",
+        "z": "665cd480.5bc3e4",
+        "name": "",
+        "group": "47ae6855.1b39f",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 750,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "47ae6855.1b39f",
+        "type": "ui_group",
+        "z": "665cd480.5bc3e4",
+        "name": "Default",
+        "tab": "e055f34d.bed8b8",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e055f34d.bed8b8",
+        "type": "ui_tab",
+        "z": "665cd480.5bc3e4",
+        "name": "Home",
+        "icon": "dashboard"
+    }
+]
+```
