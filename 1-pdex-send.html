@@ -1,0 +1,137 @@
+<script type="text/javascript">
+    RED.nodes.registerType('PD Exchange',{
+        category: 'output',
+        color: '#dddd88',
+        defaults: {
+            name :  {value: "To PDEx"},
+            pdexurl : {value: "http://localhost:8090"},
+            accesskey : {value: ""},
+            deviceid : {value: ""},
+            secretkey : {value: ""},
+            appid: {value: ""},
+            apptoken: {value: ""}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "pdex.png",
+        align: "right",
+        label: function() {
+            return this.name||"PD Exchange";
+        },
+
+        oneditprepare: function() {
+
+            if (this.topicType == null) {
+                this.topicType = "";
+            } else if (this.topicType === 'string' || this.topicType === 'none') {
+                this.topicType = "str";
+            }
+
+            $("#node-input-pdexurl").val(this.pdexurl);
+            $("#node-input-accesskey").val(this.accesskey);
+            $("#node-input-deviceid").val(this.deviceid);
+            $("#node-input-secretkey").val(this.secretkey);
+            $("#node-input-appid").val(this.appid);
+            $("#node-input-apptoken").val(this.apptoken);
+
+            if (this.payloadType == null) {
+                this.payloadType = "";
+            } else if (this.payloadType === 'string' || this.payloadType === 'none') {
+                this.payloadType = "str";
+            }
+            $("#node-input-payloadType").val(this.payloadType);
+
+            $("#node-input-payload").typedInput({
+                default: 'msg',
+                typeField: $("#node-input-payloadType"),
+                types:['msg','str']
+            });
+            $("#node-input-payload").typedInput('type',this.payloadType);
+        },
+        button: {
+            enabled: function() {
+                return !this.changed
+            },
+            onclick: function() {
+                if (this.changed) {
+                    return RED.notify(RED._("notification.warning", {message:RED._("notification.warnings.undeployedChanges")}),"warning");
+                }
+                if ((this.payloadType=='str' && !this.payload) || this.payloadType=='msg' || this.aliasType=='msg') {
+                    return RED.notify(RED._("notification.warning", {message:RED._("notification.warnings.invalidMessage")}),"warning");
+                }
+
+                var label = (this.name||this.payload);
+                var node = this;
+                $.ajax({
+                    url: "inject/"+this.id,
+                    type:"POST",
+                    success: function(resp, textStatus, xhr) {
+                        RED.notify(node._("inject.success",{label:label}),"success");
+                    },
+                    error: function(jqXHR,textStatus,errorThrown) {
+                        if (jqXHR.status == 404) {
+                            RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.not-deployed")}),"error");
+                        } else if (jqXHR.status == 500) {
+                            RED.notify(node._("common.notification.error",{message:node._("inject.errors.failed")}),"error");
+                        } else if (jqXHR.status == 0) {
+                            RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.no-response")}),"error");
+                        } else {
+                            RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:jqXHR.status,message:textStatus})}),"error");
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="PD Exchange">
+
+    <div class="form-row">
+        <label for="node-input-pdexurl"><i class="icon-cog"></i> PDEx URL</label>
+        <input type="text" id="node-input-pdexurl" placeholder="PDEx URL">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-accesskey"><i class="icon-cog"></i> Access Key</label>
+        <input type="text" id="node-input-accesskey" placeholder="Access Key">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-deviceid"><i class="icon-cog"></i> Device Id</label>
+        <input type="text" id="node-input-deviceid" placeholder="xxx.xxxxxx.xxxxx">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-secretkey"><i class="icon-cog"></i> Secret Key</label>
+        <input type="text" id="node-input-secretkey" placeholder="Secret Key">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-appid"><i class="icon-cog"></i> App Id</label>
+        <input type="text" id="node-input-appid" placeholder="App Id">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-apptoken"><i class="icon-cog"></i> App Token</label>
+        <input type="text" id="node-input-apptoken" placeholder="App Token">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="PD Exchange">
+    <p>PDEchangeにデーターを送信する</p>
+    <p>
+        PDExchangeはあらゆるIoTデバイスとアプリケーション間を接続、相互データ通信を実現するIoTプラットフォームです。
+        PDExchangeの詳細、使い方は<a href="https://pd.plathome.co.jp">こちら</a>をご覧ください。
+    </p>
+    <p>
+        Node-RedのOutput ノード一覧からPD Exchangeノードを選んでで、PD Exchangeの認証キーやアプリやディバイス情報を設定します。
+    </p>
+    <p>
+        データーは　JSON <pre>{"a":1, "b":2,...}</pre>という形式で渡します。
+    </p>
+</script>
