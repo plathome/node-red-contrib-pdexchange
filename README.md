@@ -11,10 +11,6 @@
 
 ![](docs/images/fig2.png?raw=true)
 
-3. Bypassing String as message
-
-![](docs/images/fig3.png?raw=true)
-
 
 
 ### Installation
