@@ -56,9 +56,8 @@ module.exports = function (RED) {
 							"Content-type": "application/json",
 							'Authorization': 'Bearer ' + body.digest
 						},
-						json: { payloadObject }
-						//debug
-						node.status({text: payloadObject});
+						body: payloadObject,
+						json: true
 					};
 
 					request.post(options_send, function (error, response, body) {
@@ -71,13 +70,11 @@ module.exports = function (RED) {
 
 						if (code == 201) {
 							var msg = {
-								payload: jsonparse(payloadObject),
+								payload: payloadObject,
 								transaction: jsonparse(body)
 							};
 							node.send(msg);
 							node.status({});
-							//debug	
-							node.status({text: msg});
 						}
 					});
 				}
