@@ -45,7 +45,6 @@ module.exports = function (RED) {
 				if (error) {
 					node.error(error);
 					node.status({ fill: "red", shape: "ring", text: "pdex hmac create failed" });
-					return console.log(error);
 				}
 
 				var code = (response && response.statusCode);
@@ -58,13 +57,14 @@ module.exports = function (RED) {
 							'Authorization': 'Bearer ' + body.digest
 						},
 						json: { payloadObject }
+						//debug
+						node.status({text: payloadObject});
 					};
 
 					request.post(options_send, function (error, response, body) {
 						if (error) {
 							node.error(error);
 							node.status({ fill: "red", shape: "ring", text: "pdex data send failed" });
-							return console.log(error);
 						}
 
 						var code = (response && response.statusCode);
@@ -76,6 +76,8 @@ module.exports = function (RED) {
 							};
 							node.send(msg);
 							node.status({});
+							//debug	
+							node.status({text: msg});
 						}
 					});
 				}
